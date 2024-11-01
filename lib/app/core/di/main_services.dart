@@ -15,7 +15,5 @@ class MainServices extends GetxService {
     Get.put(CartScreenController(), permanent: true);
   }
 
-  void dependencies() {
-    Get.put(ProfileScreenController(), permanent: true);
-  }
+  void dependencies() {}
 }

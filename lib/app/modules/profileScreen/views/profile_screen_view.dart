@@ -20,124 +20,134 @@ class ProfileScreenView extends GetView<ProfileScreenController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
-    return SafeArea(child: Scaffold(body: Obx(() {
-      return controller.isLoading.isTrue
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.adaptSize),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 40.adaptSize,
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                    // CircleAvatar(
-                    //   radius: 25.adaptSize,
-                    //   backgroundColor: Theme.of(context).colorScheme.primary,
-                    //   child: Text(
-                    //     controller.userModel!.fullName!
-                    //         .substring(0, 1)
-                    //         .toUpperCase(),
-                    //   ),
-                    // ),
-                    SizedBox(width: 20.adaptSize),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(controller.userModel?.fullName ?? "",
-                            style: Theme.of(context).textTheme.headlineLarge),
-                        SizedBox(height: 5.v),
-                        Text(controller.userModel?.phoneNumber ?? "",
-                            style: Theme.of(context).textTheme.labelMedium),
-                      ],
+    return GetBuilder<ProfileScreenController>(
+      init: ProfileScreenController(),
+      builder: (controller) => SafeArea(child: Scaffold(body: Obx(() {
+        return controller.isLoading.isTrue
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.adaptSize),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 40.adaptSize,
                     ),
-                  ]),
-                  SizedBox(height: 45.v),
-                  Text(
-                    'Account Settings',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.person_2_outlined,
-                      Icons.arrow_forward,
-                      () => onTapUpdateInformation(context),
-                      updateInformation.tr),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.shop_outlined,
-                      Icons.arrow_forward,
-                      () => _buildMyOrders(context),
-                      myOrders.tr),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.maps_ugc_outlined,
-                      Icons.arrow_forward,
-                      () => onTapDeliveryAddress(context),
-                      deliveryAddress.tr),
-                  SizedBox(height: 20.v),
-                  Text(
-                    'Settings',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.language_rounded,
-                      Icons.arrow_forward,
-                      () => onTapChangeLanguage(context),
-                      changeLanguage.tr),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.support,
-                      Icons.arrow_forward,
-                      () => onTapCustomerSupport(context),
-                      customerSupport.tr),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.info_outline,
-                      Icons.arrow_forward,
-                      () => onTapAboutPowerEthiopia(context),
-                      "${about.tr} Power Ethiopia"),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.feedback_outlined,
-                      Icons.arrow_forward,
-                      () => onTapGiveFeedback(context),
-                      giveFeedback.tr),
-                  settingListTile(
-                      context,
-                      theme,
-                      Icons.text_format_outlined,
-                      Icons.arrow_forward,
-                      () => onTapTermsConditions(context),
-                      'Terms & Conditions'),
-                  ListTile(
-                    leading: Icon(Icons.logout_outlined,
-                        color: Theme.of(context).colorScheme.error),
-                    contentPadding: EdgeInsets.all(0),
-                    title: Text(logout.tr, style: theme.bodyMedium),
-                    onTap: () {
-                      Get.to(_buildLogOut(context));
-                    },
-                    trailing: Icon(Icons.arrow_forward,
-                        color: Theme.of(context).colorScheme.error),
-                  ),
-                ],
-              ),
-            ));
-    })));
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 25.adaptSize,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            child: Text(
+                              controller.userModel!.fullName!
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                            ),
+                          ),
+                          SizedBox(width: 20.adaptSize),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(controller.userModel?.fullName ?? "",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge),
+                              SizedBox(height: 5.v),
+                              Text(controller.userModel?.phoneNumber ?? "",
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium),
+                            ],
+                          ),
+                        ]),
+                    SizedBox(height: 45.v),
+                    Text(
+                      'Account Settings',
+                      style: Theme.of(context).textTheme.headlineLarge,
+
+                    ),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.person_2_outlined,
+                        Icons.arrow_forward,
+                        () => onTapUpdateInformation(context),
+                        updateInformation.tr),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.shop_outlined,
+                        Icons.arrow_forward,
+                        () => onTapMyDelivery(context),
+                        myOrders.tr),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.maps_ugc_outlined,
+                        Icons.arrow_forward,
+                        () => onTapDeliveryAddress(context),
+                        deliveryAddress.tr),
+                    SizedBox(height: 20.v),
+                    Text(
+                      'Settings',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.language_rounded,
+                        Icons.arrow_forward,
+                        () => onTapChangeLanguage(context),
+                        changeLanguage.tr),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.support,
+                        Icons.arrow_forward,
+                        () => onTapCustomerSupport(context),
+                        customerSupport.tr),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.info_outline,
+                        Icons.arrow_forward,
+                        () => onTapAboutPowerEthiopia(context),
+                        "${about.tr} Power Ethiopia"),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.feedback_outlined,
+                        Icons.arrow_forward,
+                        () => onTapGiveFeedback(context),
+                        giveFeedback.tr),
+                    settingListTile(
+                        context,
+                        theme,
+                        Icons.text_format_outlined,
+                        Icons.arrow_forward,
+                        () => onTapTermsConditions(context),
+                        'Terms & Conditions'),
+                    ListTile(
+                      leading: Icon(Icons.logout_outlined,
+                          color: Theme.of(context).colorScheme.error),
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text(logout.tr, style: theme.bodyMedium),
+                      onTap: () {
+                        Get.to(_buildLogOut(context));
+                      },
+                      trailing: Icon(Icons.arrow_forward,
+                          color: Theme.of(context).colorScheme.error),
+                    ),
+                  ],
+                ),
+              ));
+      }))),
+    );
   }
 
   ListTile settingListTile(
@@ -180,6 +190,12 @@ class ProfileScreenView extends GetView<ProfileScreenController> {
             height: 55.h,
             onPressed: () => controller.logout(),
           );
+  }
+
+  /// Navigates to the MyOrderView when the action is triggered.
+  onTapMyDelivery(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyOrderView()));
   }
 
   /// Navigates to the aboutPowerScreen when the action is triggered.
