@@ -52,6 +52,7 @@ dependencies:
   url_launcher: ^6.2.3
   webview_flutter: ^4.7.0
   with_helper: ^0.0.2
+  youtube_player_flutter: ^9.1.1
   youtube_player_iframe: ^5.2.0
 
 dev_dependencies:

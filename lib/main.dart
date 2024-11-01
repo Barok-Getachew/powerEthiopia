@@ -6,6 +6,7 @@ import 'package:media_kit/media_kit.dart';
 import 'app/core/di/main_services.dart';
 import 'app/core/i18n/messages.dart';
 import 'app/core/utils/theme/theme.dart';
+import 'app/modules/profileScreen/controllers/profile_screen_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,7 +21,7 @@ abstract class BuildContextX {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  Get.put(ProfileScreenController(), permanent: true);
   // Make sure to add the required packages to pubspec.yaml:
   // * https://github.com/media-kit/media-kit#installation
   // * https://pub.dev/packages/media_kit#installation
