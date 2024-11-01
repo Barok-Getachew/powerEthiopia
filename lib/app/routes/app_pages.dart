@@ -174,7 +174,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.creditFormView,
-      page: () => const CreditFormViewView(),
+      page: () => CreditFormViewView(),
       binding: CreditFormViewBinding(),
     ),
     GetPage(
