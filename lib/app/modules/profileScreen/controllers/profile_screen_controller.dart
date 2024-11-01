@@ -43,8 +43,8 @@ class ProfileScreenController extends GetxController {
   void onInit() async {
     formKey = GlobalKey<FormState>();
     feedbackController = TextEditingController();
-    getUserData();
-    getAboutUs();
+    await getUserData();
+    await getAboutUs();
     super.onInit();
   }
 

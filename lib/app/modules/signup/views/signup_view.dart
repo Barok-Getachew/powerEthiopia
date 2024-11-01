@@ -216,7 +216,7 @@ class SignupView extends GetView<SignupController> {
               GooglePlaceAutoCompleteTextField(
                 textStyle: Theme.of(context).textTheme.labelMedium!,
                 textEditingController: controller.cityController,
-                googleAPIKey: "AIzaSyByhdEvg9zugmGL_dWr0yjmibOnY1yZ3vw",
+                googleAPIKey: "",
                 inputDecoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.location_city,

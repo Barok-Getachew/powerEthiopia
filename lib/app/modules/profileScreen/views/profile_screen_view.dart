@@ -182,6 +182,12 @@ class ProfileScreenView extends GetView<ProfileScreenController> {
           );
   }
 
+  /// Navigates to the MyOrderView when the action is triggered.
+  onTapMyDelivery(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyOrderView()));
+  }
+
   /// Navigates to the aboutPowerScreen when the action is triggered.
   onTapAboutPowerEthiopia(BuildContext context) {
     Navigator.push(

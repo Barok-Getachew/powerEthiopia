@@ -84,6 +84,7 @@ class PlayingScreenController extends GetxController {
     }
   }
 
+  late final TabController tabController;
   @override
   void onInit() {
     trainingId = Get.arguments;
