@@ -1,4 +1,6 @@
+import 'package:ethiosolar_app/app/core/exports/app_exports.dart';
 import 'package:ethiosolar_app/app/core/i18n/translation_keys.dart';
+import 'package:ethiosolar_app/app/core/utils/theme/theme.dart';
 
 import 'package:ethiosolar_app/app/modules/signup/widgets/dropdown_city.dart';
 import 'package:ethiosolar_app/app/routes/app_pages.dart';
@@ -27,7 +29,7 @@ class LanguageView extends GetView<LanguageController> {
               children: [
                 const SizedBox(height: 20),
                 const CircularLogo(),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10.v),
 
                 Column(
                   children: [

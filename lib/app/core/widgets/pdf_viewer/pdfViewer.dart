@@ -1,3 +1,5 @@
+import 'package:ethiosolar_app/app/core/exports/app_exports.dart';
+import 'package:ethiosolar_app/app/core/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -29,7 +31,7 @@ class PdfViewerWidgetState extends State<PdfViewerWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SizedBox(
-        height: widget.height.h,
+        height: widget.height.v,
         child: SfPdfViewer.network(
           widget.url,
           canShowScrollHead: false,

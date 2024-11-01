@@ -131,21 +131,6 @@ class SignupController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
   var isChecked = false.obs;
-  bool isStepCompleted() {
-    if (activeStep.value == 0) {
-      // Check if all fields in the first step are filled
-      return fullNameController.text.isNotEmpty &&
-          phoneController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty;
-    } else if (activeStep.value == 1) {
-      // Check if all fields in the second step are filled
-      return cityController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          jobNameController.text.isNotEmpty;
-    }
-    return false;
-  }
 
   void toggle() {
     isChecked.value = !isChecked.value;
@@ -266,12 +251,6 @@ class SignupController extends GetxController {
         isLoading.value = true;
         debugPrint('here 1');
 
-        // dio.FormData formDatas = dio.FormData.fromMap({
-        //   "file": await dio.MultipartFile.fromFile(selectedImage!.path,
-        //       filename: selectedImage!.path.split('/').last,
-        //       contentType:
-        //           _mediaType.getMediaType(selectedImage!.path.split('/').last))
-        // });
         debugPrint('here 2');
 
         ApiResponse? responseUpload = await ApiClient.instance.call(

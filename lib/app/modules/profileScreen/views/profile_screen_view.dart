@@ -69,6 +69,7 @@ class ProfileScreenView extends GetView<ProfileScreenController> {
                     Text(
                       'Account Settings',
                       style: Theme.of(context).textTheme.headlineLarge,
+
                     ),
                     settingListTile(
                         context,
