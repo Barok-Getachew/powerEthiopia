@@ -2,6 +2,11 @@ import 'package:ethiosolar_app/app/core/exports/app_exports.dart';
 
 import 'package:ethiosolar_app/app/modules/login/widget/phone_field.dart';
 import 'package:flutter/material.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/place_type.dart';
+import 'package:google_places_flutter/model/prediction.dart';
+import 'package:intl_phone_field/phone_number.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../../core/i18n/translation_keys.dart' as trs;
 
@@ -9,6 +14,7 @@ import '../../../core/i18n/translation_keys.dart';
 import '../../../core/widgets/pdf_viewer/circular_logo.dart';
 
 import '../../../core/widgets/pdf_viewer/pdfViewer.dart';
+import '../../../core/widgets/terms_and_condiruions/terms_and_condition.dart';
 import '../../../data/services/api_constant.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/signup_controller.dart';
@@ -35,12 +41,9 @@ class SignupView extends GetView<SignupController> {
                   child: Container(
                     height: 56.adaptSize,
                     child: FormField(
-                      validator: (p0) {
-                        if (p0 == null || p0.isEmpty) {
-                          return "*required";
-                        }
-                        return null;
-                      },
+                      validator: (lastName) => lastName!.length < 2
+                          ? trs.errorMessageForName.tr
+                          : null,
                       focusNode: controller.fullNameFocusNode,
                       nextFocusNode: controller.lastNameFocusNode,
                       iconData: Icons.person,
@@ -56,12 +59,9 @@ class SignupView extends GetView<SignupController> {
                     padding: EdgeInsets.symmetric(horizontal: 0.adaptSize),
                     height: 56.adaptSize,
                     child: FormField(
-                      validator: (p0) {
-                        if (p0 == null || p0.isEmpty) {
-                          return "*required";
-                        }
-                        return null;
-                      },
+                      validator: (lastName) => lastName!.length < 2
+                          ? trs.errorMessageForName.tr
+                          : null,
                       focusNode: controller.lastNameFocusNode,
                       nextFocusNode: controller.passwordFocusNode,
                       iconData: Icons.person,
@@ -88,7 +88,16 @@ class SignupView extends GetView<SignupController> {
               height: 56.adaptSize,
               child: Obx(
                 () => TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return trs.errorMessageForPassword2.tr;
+                      }
+                      if (value.length < 8) {
+                        return trs.errorMessageForPassword.tr;
+                      }
+                      return null;
+                    },
+                    style: Theme.of(context).textTheme.labelMedium,
                     controller: controller.passwordController,
                     keyboardType: TextInputType.text,
                     focusNode: controller.passwordFocusNode,
@@ -132,7 +141,15 @@ class SignupView extends GetView<SignupController> {
               height: 56.adaptSize,
               child: Obx(
                 () => TextFormField(
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    validator: (value) {
+                      if ((value!.isEmpty) ||
+                          value != controller.passwordController.text) {
+                        return trs.errorMessageForConfirmPassword.tr;
+                      }
+
+                      return null;
+                    },
+                    style: Theme.of(context).textTheme.labelMedium,
                     controller: controller.confirmPasswordController,
                     keyboardType: TextInputType.text,
                     focusNode: controller.confirmPasswordFocusNode,
@@ -178,7 +195,7 @@ class SignupView extends GetView<SignupController> {
         ),
         isActive: controller.activeStep.value >= 1,
         content: Container(
-          height: 300,
+          height: 353.adaptSize,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -186,9 +203,6 @@ class SignupView extends GetView<SignupController> {
                 height: 56.adaptSize,
                 child: FormField(
                   validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return "*required";
-                    }
                     return null;
                   },
                   focusNode: controller.emailFocusNode,
@@ -199,30 +213,77 @@ class SignupView extends GetView<SignupController> {
                   labelText: trs.Email.tr,
                 ),
               ),
-              Container(
-                height: 56.adaptSize,
-                child: FormField(
-                  validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return "*required";
-                    }
-                    return null;
-                  },
-                  focusNode: controller.cityFoCusNod,
-                  nextFocusNode: controller.jobNameFocusNode,
-                  iconData: Icons.location_city,
-                  editingController: controller.cityController,
-                  controller: controller,
-                  labelText: trs.city.tr,
+              GooglePlaceAutoCompleteTextField(
+                textStyle: Theme.of(context).textTheme.labelMedium!,
+                textEditingController: controller.cityController,
+                googleAPIKey: "AIzaSyByhdEvg9zugmGL_dWr0yjmibOnY1yZ3vw",
+                inputDecoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.location_city,
+                    size: 18,
+                    color: const Color.fromARGB(78, 0, 0, 0),
+                  ),
+                  hintText: trs.city.tr,
+                  border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(10.adaptSize)),
+                      borderSide: BorderSide(width: 1)),
                 ),
+                debounceTime: 800, // default 600 ms,
+                countries: ["ET"], // optional by default null is set
+                isLatLngRequired:
+                    true, // if you required coordinates from place detail
+                getPlaceDetailWithLatLng: (Prediction prediction) {
+                  print("placeDetails" + prediction.lng.toString());
+                },
+                itemClick: (Prediction prediction) {
+                  controller.cityController.text = prediction.description!;
+                  controller.cityController.selection =
+                      TextSelection.fromPosition(
+                          TextPosition(offset: prediction.description!.length));
+                },
+
+                itemBuilder: (context, index, Prediction prediction) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_on),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Expanded(child: Text("${prediction.description ?? ""}"))
+                      ],
+                    ),
+                  );
+                },
+
+                focusNode: controller.cityFoCusNod,
+                isCrossBtnShown: false,
+
+                containerHorizontalPadding: 0,
+
+                placeType: PlaceType.geocode,
               ),
+              SizedBox(
+                height: 10.adaptSize,
+              ),
+              // Container(
+              //   height: 56.adaptSize,
+              //   child: FormField(
+              //     validator: (value) {},
+              //     focusNode: controller.cityFoCusNod,
+              //     nextFocusNode: controller.jobNameFocusNode,
+              //     iconData: Icons.location_city,
+              //     editingController: controller.cityController,
+              //     controller: controller,
+              //     labelText: trs.city.tr,
+              //   ),
+              // ),
               Container(
                 height: 56.adaptSize,
                 child: FormField(
-                  validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return "*required";
-                    }
+                  validator: (value) {
                     return null;
                   },
                   focusNode: controller.jobNameFocusNode,
@@ -247,16 +308,14 @@ class SignupView extends GetView<SignupController> {
                   ),
                   Obx(() => InkWell(
                         onTap: () async {
-                          await controller.getTerm();
-
-                          if (controller.termModelList.isNotEmpty) {
-                            Get.to(PdfViewerWidget(
-                              height: MediaQuery.of(context).size.height * 0.8,
-                              url:
-                                  "${ApiConstant.baseImageUrl}${controller.termModelList[0].pdfUrl}" ??
-                                      '',
-                            ));
-                          }
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Policy(
+                                  mdFile: 'terms.md',
+                                  radius: 8,
+                                );
+                              });
                         },
                         child: SizedBox(
                           child: Text(
@@ -280,27 +339,71 @@ class SignupView extends GetView<SignupController> {
       ),
       Step(
         title: Text(
-          'Register',
+          'Verfication',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         isActive: controller.activeStep.value >= 2,
         content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [],
-            ),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              height: 56,
-              width: double.infinity,
-              child: PhoneField(
-                controller: controller,
-                phoneFocusNode: controller.phoneFocusNode,
-                nextFocusNode: controller.passwordFocusNode,
+            Text(trs.activate.tr,
+                style: Theme.of(context).textTheme.headlineLarge),
+            SizedBox(height: 30.adaptSize),
+            Pinput(
+              animationCurve: Curves.elasticIn,
+              isCursorAnimationEnabled: true,
+              length: 4,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              pinAnimationType: PinAnimationType.none,
+              defaultPinTheme: PinTheme(
+                width: 50,
+                height: 50,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  ),
+                ),
               ),
+              focusedPinTheme: PinTheme(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              onCompleted: (value) => debugPrint(value),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(trs.otpMessage.tr,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                ),
+                SizedBox(
+                  width: 3.h,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    trs.otpResend.tr,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                )
+              ],
             ),
           ],
         ),
@@ -313,6 +416,7 @@ class SignupView extends GetView<SignupController> {
       automaticallyImplyLeading: false,
       centerTitle: true,
       elevation: 0,
+      forceMaterialTransparency: true,
       actions: [
         Align(
             alignment: Alignment.centerRight,
@@ -332,7 +436,7 @@ class SignupView extends GetView<SignupController> {
           const CircularLogo(),
           Center(
             child: Text(
-              'Sign Up',
+              trs.signup.tr,
               style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
@@ -351,21 +455,61 @@ class SignupView extends GetView<SignupController> {
           Obx(
             () => Form(
               key: controller.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Stepper(
                 elevation: 0,
                 currentStep: controller.activeStep.value,
                 type: StepperType.horizontal,
                 onStepContinue: () {
-                  controller.formKey.currentState!.validate();
-
-                  if (controller.isStepCompleted()) {
-                    if (controller.activeStep.value ==
-                        buildSteps(context).length - 1) {
-                      print('send to server');
-                      print(controller.activeStep.value);
+                  if (controller.activeStep.value == 0) {
+                    if (controller.formKey.currentState!.validate()) {
+                      if (controller.fullNameController.text.isNotEmpty &&
+                          controller.phoneController.text.isNotEmpty &&
+                          controller.passwordController.text.isNotEmpty &&
+                          controller
+                              .confirmPasswordController.text.isNotEmpty) {
+                        controller.activeStep.value++;
+                      } else {
+                        Get.snackbar(
+                          error.tr,
+                          pleaseUpload.tr,
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
                     } else {
-                      controller.activeStep.value++;
+                      Get.snackbar(
+                        'Validation Error',
+                        'Please correct the errors in the form.',
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
                     }
+                  } else if (controller.activeStep.value == 1) {
+                    if (controller.cityController.text.isNotEmpty &&
+                        controller.jobNameController.text.isNotEmpty) {
+                      controller.activeStep.value++;
+                    } else {
+                      Get.snackbar(
+                        error.tr,
+                        pleaseUpload.tr,
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  } else if (controller.activeStep.value == 2) {
+                    //Form Field
+                  } else {
+                    Get.snackbar(
+                      error.tr,
+                      pleaseUpload.tr,
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
                   }
                 },
                 onStepCancel: () {
@@ -492,7 +636,7 @@ class FormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
         validator: validator,
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.labelMedium,
         controller: editingController,
         keyboardType: TextInputType.text,
         focusNode: focusNode,
@@ -611,7 +755,7 @@ class ImageUploadField extends StatelessWidget {
                           controller.selectedMultipleImagesObs.isNotEmpty
                               ? 'Selected: ${controller.selectedMultipleImagesObs[0]!.path.split('/').last}'
                               : 'Please upload', // Use your localization here
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.labelMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -631,15 +775,20 @@ class ImageUploadField extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Image Source'),
+          title: Text(
+            'Select Image Source',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
+                leading: Icon(Icons.camera_alt),
                 title: Text('Camera'),
                 onTap: () => Navigator.of(context).pop('camera'),
               ),
               ListTile(
+                leading: Icon(Icons.photo_library),
                 title: Text('Gallery'),
                 onTap: () => Navigator.of(context).pop('gallery'),
               ),

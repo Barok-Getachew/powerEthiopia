@@ -81,7 +81,7 @@ final light_theme = ThemeData(
     labelMedium: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w700,
-      color: const Color.fromARGB(111, 0, 0, 0),
+      color: const Color.fromARGB(184, 0, 0, 0),
       overflow: TextOverflow.ellipsis,
     ),
 
