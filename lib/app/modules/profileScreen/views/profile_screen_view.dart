@@ -36,15 +36,15 @@ class ProfileScreenView extends GetView<ProfileScreenController> {
                     height: 40.adaptSize,
                   ),
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                    // CircleAvatar(
-                    //   radius: 25.adaptSize,
-                    //   backgroundColor: Theme.of(context).colorScheme.primary,
-                    //   child: Text(
-                    //     controller.userModel!.fullName!
-                    //         .substring(0, 1)
-                    //         .toUpperCase(),
-                    //   ),
-                    // ),
+                    CircleAvatar(
+                      radius: 25.adaptSize,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Text(
+                        controller.userModel!.fullName!
+                            .substring(0, 1)
+                            .toUpperCase(),
+                      ),
+                    ),
                     SizedBox(width: 20.adaptSize),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
